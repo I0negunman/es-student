@@ -9,38 +9,70 @@
 #include "device.h"
 
 #define LINE_SIZE 32
+#define COMMAND_COUNT (sizeof(commands) / sizeof(commands[0]))
 
 const uint BUTTON_PIN = 15;
 const uint DEBOUNCE_MS = 20;
 
+typedef void (*command_handler_t)(void);
+
+struct command_t
+{
+    const char *name;
+    command_handler_t handler;
+};
+
+
 char line[LINE_SIZE];
 uint line_length = 0;
 
+void cmd_enable(void) {
+     led_set(true);
+     LOG_INF("led %s\n", led_is_on() ? "on" : "off");
+}
+
+void cmd_disable(void) {
+     led_set(false);
+     LOG_INF("led %s\n", led_is_on() ? "on" : "off");
+}
+
+void cmd_info(void) {
+    device_info();
+}
+
+void cmd_version(void) {
+    log_version();
+}
+
+void cmd_ping(void) {
+    printf("pong\n");
+}
+
+
+const struct command_t commands[] = {
+    { "enable", cmd_enable },
+    { "disable", cmd_disable },
+    { "info", cmd_info },
+    { "version", cmd_version },
+    { "ping", cmd_ping },
+};
+
 void handle_command(const char *command)
 {
-    if (strcmp(command, "enable") == 0)
+    for (uint i = 0; i < COMMAND_COUNT; i++)
     {
-        led_set(true);
-        LOG_INF("led %s\n", led_is_on() ? "on" : "off");
-    }
-    else if (strcmp(command, "disable") == 0)
-    {
-        led_set(false);
-        LOG_INF("led %s\n", led_is_on() ? "on" : "off");
+        if (strcmp(command, commands[i].name) == 0)
+        {
+            if (commands[i].handler != NULL)
+            {
+                commands[i].handler();
+            }
+
+            return;
+        }
     }
 
-    else if (strcmp(command, "info") == 0) 
-    {
-        device_info();
-    }
-    else if (strcmp(command, "version") == 0) {
-        log_version();
-    }
-    else
-    {
-        LOG_ERR("unknown command: %s\n", command);
-    }
-
+    LOG_ERR("unknown command: %s\n", command);
 }
 
 bool get_button_debounce(uint pin)
@@ -93,6 +125,7 @@ int main()
     bool previous = false;
     volatile uint32_t *gpio_out_set = (uint32_t *)(SIO_BASE + SIO_GPIO_OUT_SET_OFFSET);
     volatile uint32_t *gpio_out_clr = (uint32_t *)(SIO_BASE + SIO_GPIO_OUT_CLR_OFFSET);
+
 
     stdio_init_all();
 
