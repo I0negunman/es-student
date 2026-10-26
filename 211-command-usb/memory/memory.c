@@ -52,7 +52,7 @@ void mem_info(void)
         ((uintptr_t)&__data_end__ - (uintptr_t)&__data_start__));
     printf("  flash free %8u of %8u\n",  (uintptr_t)(XIP_BASE + PICO_FLASH_SIZE_BYTES - (uintptr_t)&__flash_binary_end), (uintptr_t)PICO_FLASH_SIZE_BYTES );
     printf("  ram used %8u = data %8u + bss %8u\n",  (uintptr_t)&__bss_end__ - (uintptr_t)&__bss_start__ + (uintptr_t)&__data_end__ - (uintptr_t)&__data_start__, (uintptr_t)&__data_end__ - (uintptr_t)&__data_start__, (uintptr_t)&__bss_end__ - (uintptr_t)&__bss_start__);
-    printf(" ram used %8u for heap and %8u for stack",  (uintptr_t)&__HeapLimit - (uintptr_t)&__bss_end__, (uintptr_t)&__StackTop - (uintptr_t)&__StackBottom);
+    printf("  ram free %8u for heap and %8u for stack",  (uintptr_t)&__HeapLimit - (uintptr_t)&__bss_end__, (uintptr_t)&__StackTop - (uintptr_t)&__StackBottom);
     // итог: образ во флеш и из чего он сложился
     // итог: свободно во флеш-памяти из всего её объёма
     // итог: занято в ОЗУ — .data и .bss
