@@ -8,6 +8,7 @@
 #include "log.h"
 #include "device.h"
 #include "memory.h"
+#include "command.h"
 
 #define LINE_SIZE 32
 
