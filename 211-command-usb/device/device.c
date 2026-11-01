@@ -28,7 +28,7 @@ void device_info(void) {
 }
 
 
-struct info_t device_card;
+struct info_t device_card = {1, 1, 1};
 
 
 void dev_info(void) {
