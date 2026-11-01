@@ -86,11 +86,11 @@ void fw_info(void) {
    for (int i = 0; i < command_count; i++) {
       printf("- %s 0x%08x\n", commands[i].name, commands[i].handler);
    }
-   printf("DEVICE_PROJECT: 0x%08x %s\n", &DEVICE_PROJECT, DEVICE_PROJECT);
-   printf("DEVICE_BOARD: 0x%08x %s\n", &DEVICE_BOARD, DEVICE_BOARD);
-   printf("data_variable: 0x%08x %d\n", &data_variable, data_variable);
-   printf("bss_variable: 0x%08x %d\n", &bss_variable, bss_variable);
-   printf("stack_variable: 0x%08x %d\n", &stack_variable, stack_variable);
-   printf("heap_variable: 0x%08x %d\n", heap_variable, *heap_variable);
+   printf("DEVICE_PROJECT 0x%08x %s\n", &DEVICE_PROJECT, DEVICE_PROJECT);
+   printf("DEVICE_BOARD 0x%08x %s\n", &DEVICE_BOARD, DEVICE_BOARD);
+   printf("data_variable 0x%08x %d\n", &data_variable, data_variable);
+   printf("bss_variable 0x%08x %d\n", &bss_variable, bss_variable);
+   printf("stack_variable 0x%08x %d\n", &stack_variable, stack_variable);
+   printf("heap_variable 0x%08x %d\n", heap_variable, *heap_variable);
    free(heap_variable);
 }
