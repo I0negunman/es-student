@@ -1,10 +1,18 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include "hardware/regs/addressmap.h"
+#include "hardware/regs/sysinfo.h"
 #include "pico/stdlib.h"
+#include "command.h"
+#include "device.h"
 
 #define SRAM_SIZE_BYTES (264*1024)
 #define ROM_SIZE_BYTES (16*1024)
+
+int main(void);
+uint32_t data_variable = 100;
+uint32_t bss_variable;
 
 extern char __flash_binary_start;
 extern char __flash_binary_end;
@@ -57,4 +65,32 @@ void mem_info(void)
     // итог: свободно во флеш-памяти из всего её объёма
     // итог: занято в ОЗУ — .data и .bss
     // итог: свободно в ОЗУ — под кучу и под стек
+}
+
+void fw_info(void) {
+   uint16_t *main_code = (uint16_t *)((uintptr_t)main & ~1u);
+   uint16_t *fw_info_code  = (uint16_t *)((uintptr_t)fw_info & ~1u);
+   data_variable++;
+   bss_variable++;
+   uint32_t stack_variable = 1946;
+   uint32_t *heap_variable = malloc(sizeof(uint32_t));
+
+   if (heap_variable != NULL)
+   {
+        *heap_variable = 1951;
+   }
+   printf("object address value\n");
+   printf("main 0x%08x 0x%04x\n", main, *main_code);
+   printf("fw_info 0x%08x 0x%04x\n", fw_info, *fw_info_code);
+   printf("commands 0x%08x\n", &commands);
+   for (int i = 0; i < command_count; i++) {
+      printf("- %s 0x%08x\n", commands[i].name, commands[i].handler);
+   }
+   printf("DEVICE_PROJECT: 0x%08x %s\n", &DEVICE_PROJECT, DEVICE_PROJECT);
+   printf("DEVICE_BOARD: 0x%08x %s\n", &DEVICE_BOARD, DEVICE_BOARD);
+   printf("data_variable: 0x%08x %d\n", &data_variable, data_variable);
+   printf("bss_variable: 0x%08x %d\n", &bss_variable, bss_variable);
+   printf("stack_variable: 0x%08x %d\n", &stack_variable, stack_variable);
+   printf("heap_variable: 0x%08x %d\n", heap_variable, *heap_variable);
+   free(heap_variable);
 }
