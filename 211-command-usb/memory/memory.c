@@ -6,7 +6,10 @@
 #include "pico/stdlib.h"
 #include "command.h"
 #include "device.h"
+#include "led.h"
 
+
+#define VECTOR_TABLE 0x10000100
 #define SRAM_SIZE_BYTES (264*1024)
 #define ROM_SIZE_BYTES (16*1024)
 
@@ -93,4 +96,21 @@ void fw_info(void) {
    printf("stack_variable 0x%08x %d\n", &stack_variable, stack_variable);
    printf("heap_variable 0x%08x %d\n", heap_variable, *heap_variable);
    free(heap_variable);
+}
+
+
+void boot_info(void) {
+    const uint32_t *vectors = (const uint32_t *)VECTOR_TABLE;
+    uint32_t stack_top = vectors[0];
+    uint32_t reset_handler = vectors[1];
+    printf("vector table 0x%08x\n", vectors);
+    printf("  stack top 0x%08x\n", stack_top);
+    printf("  reset 0x%08x\n", reset_handler);
+    printf("  reset (even) 0x%08x\n", reset_handler & ~1u);
+
+    volatile uint32_t *gpio_in = (uint32_t *)(SIO_BASE + SIO_GPIO_IN_OFFSET);
+    volatile uint32_t level = (*gpio_in >> led_pin()) & 1u;
+    printf("gpio_in    0x%08x\n", SIO_BASE + SIO_GPIO_IN_OFFSET);
+    printf("  led bit  %d\n", level);
+    printf("  gpio get %d\n", gpio_get(led_pin()));
 }
