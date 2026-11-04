@@ -1,7 +1,6 @@
 #include "pico/stdlib.h"
 #include <stdio.h>
 #include <string.h>
-#include "hardware/gpio.h"
 #include "hardware/regs/addressmap.h"
 #include "hardware/regs/sio.h"
 #include "led.h"
@@ -13,10 +12,10 @@
 
 #define LINE_SIZE 32
 
-const uint BUTTON_PIN = 15;
-const uint DEBOUNCE_MS = 20;
-
 typedef void (*command_handler_t)(void);
+const uint BLINK_HALF_PERIOD_MS = 500;
+uint64_t last_toggle_us = 0;
+
 
 struct command_t
 {
@@ -27,16 +26,6 @@ struct command_t
 
 char line[LINE_SIZE];
 uint line_length = 0;
-
-void cmd_enable(void) {
-     led_set(true);
-     LOG_INF("led %s\n", led_is_on() ? "on" : "off");
-}
-
-void cmd_disable(void) {
-     led_set(false);
-     LOG_INF("led %s\n", led_is_on() ? "on" : "off");
-}
 
 void cmd_info(void) {
     device_info();
@@ -70,9 +59,11 @@ void cmd_clk_info(void) {
    clk_info();
 }
 
+void cmd_uptime(void) {
+   uptime();
+}
+
 const struct command_t commands[] = {
-    { "enable", cmd_enable },
-    { "disable", cmd_disable },
     { "info", cmd_info },
     { "version", cmd_version },
     { "ping", cmd_ping },
@@ -81,10 +72,22 @@ const struct command_t commands[] = {
     { "dev_info", cmd_dev_info},
     { "boot_info", cmd_boot_info},
     { "clk_info", cmd_clk_info},
+    { "uptime", cmd_uptime},
 };
 
 
 const uint command_count = sizeof(commands) / sizeof(commands[0]);
+
+void blink(void)
+{
+    uint64_t now_us = time_us_64();
+
+    if (now_us - last_toggle_us >= BLINK_HALF_PERIOD_MS * 1000)
+    {
+        last_toggle_us = now_us;
+        led_toggle();
+    }
+}
 
 void handle_command(const char *command)
 {
@@ -102,13 +105,6 @@ void handle_command(const char *command)
     }
 
     LOG_ERR("unknown command: %s\n", command);
-}
-
-bool get_button_debounce(uint pin)
-{
-    bool state = gpio_get(pin);
-    sleep_ms(DEBOUNCE_MS);
-    return state && gpio_get(pin);
 }
 
 void read_line(void)
@@ -146,9 +142,6 @@ void read_line(void)
 int main()
 {
     led_init();
-    gpio_init(BUTTON_PIN);
-    gpio_set_dir(BUTTON_PIN, GPIO_IN);
-    gpio_pull_up(BUTTON_PIN);
 
     bool led = false;
     bool previous = false;
@@ -160,24 +153,8 @@ int main()
 
     while (1)
     {
-        bool current = get_button_debounce(BUTTON_PIN);
-        if (previous == true && current == false)
-        {
-            led_toggle();
-            LOG_INF("led %s\n", led_is_on() ? "on" : "off");
-        }
+        blink();
 
-        previous = current;
-
-	read_line();
-       // int command = getchar_timeout_us(0);
-
-       // if (command == PICO_ERROR_TIMEOUT)
-       // {
-       //     continue;
-       // }
-       // 
-       // LOG_DBG("got %c\n", command);
-       // handle_command(command);
+        read_line();
     }
 }
