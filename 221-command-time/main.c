@@ -77,6 +77,14 @@ void cmd_main_time_reset(void) {
    printf("max reset\n");
 }
 
+void cmd_clk_sys_low(void) {
+   clk_sys_low();
+}
+
+void cmd_clk_sys_default(void) {
+   clk_sys_default();
+}
+
 double calc_pi(int n)
 {
     double sum = 0.0;
@@ -116,6 +124,8 @@ const struct command_t commands[] = {
     { "calc_pi", cmd_calc_pi},
     { "main_time_reset", cmd_main_time_reset},
     { "main_time_exec", cmd_main_time_exec},
+    { "clk_sys_low", cmd_clk_sys_low},
+    { "clk_sys_default", cmd_clk_sys_default},
 };
 
 
