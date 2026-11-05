@@ -9,6 +9,7 @@
 #include "memory.h"
 #include "command.h"
 #include "clock.h"
+#include "profiling.h"
 
 #define LINE_SIZE 32
 
@@ -67,6 +68,14 @@ void cmd_uptime(void) {
    uptime();
 }
 
+void cmd_main_time_exec(void) {
+   printf("iteration avg %.2f us, max %u us\n", profiling_avg_us(), (unsigned)profiling_max_us());
+}
+
+void cmd_main_time_reset(void) {
+   profiling_reset_max();
+   printf("max reset\n");
+}
 
 double calc_pi(int n)
 {
@@ -104,7 +113,9 @@ const struct command_t commands[] = {
     { "boot_info", cmd_boot_info},
     { "clk_info", cmd_clk_info},
     { "uptime", cmd_uptime},
-    { "calc_pi", cmd_calc_pi },
+    { "calc_pi", cmd_calc_pi},
+    { "main_time_reset", cmd_main_time_reset},
+    { "main_time_exec", cmd_main_time_exec},
 };
 
 
@@ -180,13 +191,13 @@ int main()
     volatile uint32_t *gpio_out_set = (uint32_t *)(SIO_BASE + SIO_GPIO_OUT_SET_OFFSET);
     volatile uint32_t *gpio_out_clr = (uint32_t *)(SIO_BASE + SIO_GPIO_OUT_CLR_OFFSET);
 
-
+    profiling_init();
     stdio_init_all();
 
     while (1)
     {
+        profiling_iteration();
         blink();
-
         read_line();
     }
 }
