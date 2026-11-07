@@ -7,10 +7,10 @@
 #include "pico/stdlib.h"
 #include "api.h"
 #include "log.h"
-#include "led.h"
 #include "device.h"
 #include "command.h"
 #include "profiling.h"
+#include "led-task.h"
 
 volatile double pi_result;
 
@@ -29,6 +29,21 @@ void cmd_main_time_exec(const command_t *) {
 void cmd_main_time_reset(const command_t *) {
    profiling_reset_max();
    printf("max reset\n");
+}
+
+void cmd_led_enable(const command_t *command) {
+    led_task_set_state(LED_STATE_ON);
+    print_led_state();
+}
+
+void cmd_led_disable(const command_t *command) {
+    led_task_set_state(LED_STATE_OFF);
+    print_led_state();
+}
+
+void cmd_led_blink(const command_t *command) {
+    led_task_set_state(LED_STATE_BLINK);
+    print_led_state();
 }
 
 static bool parse_u32(const char *text, uint32_t *value)
@@ -51,6 +66,27 @@ static bool parse_u32(const char *text, uint32_t *value)
 
     *value = (uint32_t)number;
     return true;
+}
+
+static void cmd_led_period(const command_t *command)
+{
+    uint32_t period_ms;
+
+    if (command->argc != 1 || !parse_u32(command->argv[0], &period_ms))
+    {
+        printf("error: usage led_period <period_ms>\n");
+        return;
+    }
+
+    // годится ли такой период, решает задача светодиода
+    if (!led_task_set_period_ms(period_ms))
+    {
+        printf("error: period_ms must be greater than 0\n");
+        return;
+    }
+
+    // ответ: состояние и период светодиода
+    print_led_state();
 }
 
 
@@ -94,6 +130,10 @@ const api_command_t api_commands[] = {
     { "calc_pi", "calculate pi: calc_pi [terms]", cmd_calc_pi },
     { "main_time_exec", "superloop iteration: average and maximum", cmd_main_time_exec },
     { "main_time_reset", "reset maximum iteration", cmd_main_time_reset },
+    { "led_enable", "turn on LED", cmd_led_enable },
+    { "led_disable", "turn off LED", cmd_led_disable },
+    { "led_blink", "blink LED", cmd_led_blink },
+    { "led_period", "set LED period: led_period <period_ms>", cmd_led_period },
 };
 
 const uint api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
