@@ -11,6 +11,7 @@
 #include "command.h"
 #include "profiling.h"
 #include "led-task.h"
+#include "button-task.h"
 
 volatile double pi_result;
 
@@ -44,6 +45,10 @@ void cmd_led_disable(const command_t *command) {
 void cmd_led_blink(const command_t *command) {
     led_task_set_state(LED_STATE_BLINK);
     print_led_state();
+}
+
+void cmd_button(const command_t *command) {
+    button();
 }
 
 static bool parse_u32(const char *text, uint32_t *value)
@@ -134,6 +139,7 @@ const api_command_t api_commands[] = {
     { "led_disable", "turn off LED", cmd_led_disable },
     { "led_blink", "blink LED", cmd_led_blink },
     { "led_period", "set LED period: led_period <period_ms>", cmd_led_period },
+    { "button", "see state of the button and amount of presses", cmd_button},
 };
 
 const uint api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
