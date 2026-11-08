@@ -48,7 +48,12 @@ void cmd_led_blink(const command_t *command) {
 }
 
 void cmd_button(const command_t *command) {
-    button();
+    if (button_task_is_pressed()) {
+        printf("button: pressed, pressed %ld\n", button_task_get_press_count());
+        return;
+    }
+    printf("button: released, pressed %ld\n", button_task_get_press_count());
+    return;
 }
 
 static bool parse_u32(const char *text, uint32_t *value)

@@ -68,19 +68,21 @@ void button_task_handle(void)
     }
 }
 
-
-void button(void) {
+bool button_task_is_pressed(void) {
     switch (button_state)
     {
         case RELEASED:
         case IF_PRESSED:
-            printf("released, presses %ld\n", counter);
-            return;
+            return 0;
         case PRESSED:
         case IF_RELEASED:
             printf("pressed, presses %ld\n", counter);
-            return;
+            return 1;
     }
 
+}
+
+uint32_t button_task_get_press_count(void) {
+    return counter;
 }
 
