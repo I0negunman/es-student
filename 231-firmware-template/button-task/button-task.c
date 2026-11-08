@@ -3,6 +3,12 @@
 #include "pico/stdlib.h"
 #include "led-task.h"
 
+typedef enum {
+    PRESSED,
+    IF_PRESSED,
+    RELEASED,
+    IF_RELEASED,
+} button_state_t;
 
 static button_state_t button_state;
 static const uint BUTTON_PIN = 15;
@@ -79,7 +85,7 @@ bool button_task_is_pressed(void) {
             printf("pressed, presses %ld\n", counter);
             return 1;
     }
-
+    return 0;
 }
 
 uint32_t button_task_get_press_count(void) {
