@@ -38,7 +38,12 @@ static bool parse_u32(const char *text, uint32_t *value)
 }
 
 void cmd_info(const command_t *) {
-    info();
+    device_info_t info;
+    device_get_info(&info);
+    printf("name: %s\n", info.name);
+    printf("serial: %s\n", info.board_id);
+    printf("chip: manufacturer 0x%03x, part 0x%04x, revision %u\n", (unsigned)info.manufacturer, (unsigned)info.part, (unsigned)info.revision);
+    printf("pico-sdk: %s\n", info.sdk_version);
 }
 
 void cmd_uptime(const command_t *){

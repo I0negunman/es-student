@@ -29,3 +29,5 @@ typedef struct{
     uint32_t revision;
     char sdk_version[16];
 } device_info_t;
+
+void device_get_info(device_info_t *info);

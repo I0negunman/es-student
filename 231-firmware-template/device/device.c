@@ -29,27 +29,18 @@
 // }
 
 void device_get_info(device_info_t *info) {
-volatile uint32_t *chip_id = (uint32_t *)(SYSINFO_BASE + SYSINFO_CHIP_ID_OFFSET);
-uint32_t id = *chip_id;
+    volatile uint32_t *chip_id = (uint32_t *)(SYSINFO_BASE + SYSINFO_CHIP_ID_OFFSET);
+    uint32_t id = *chip_id;
 
-info->manufacturer = (id & SYSINFO_CHIP_ID_MANUFACTURER_BITS)
-                     >> SYSINFO_CHIP_ID_MANUFACTURER_LSB;
+    info->manufacturer = (id & SYSINFO_CHIP_ID_MANUFACTURER_BITS)
+                        >> SYSINFO_CHIP_ID_MANUFACTURER_LSB;
 
-info->part = (id & SYSINFO_CHIP_ID_PART_BITS)
-             >> SYSINFO_CHIP_ID_PART_LSB;
+    info->part = (id & SYSINFO_CHIP_ID_PART_BITS)
+                >> SYSINFO_CHIP_ID_PART_LSB;
 
-info->revision = (id & SYSINFO_CHIP_ID_REVISION_BITS)
-                 >> SYSINFO_CHIP_ID_REVISION_LSB;
-    strcpy(info->name, DEVICE_NAME);
-    pico_get_unique_board_id_string(info->board_id, sizeof(info->board_id));
-    strcpy(info->sdk_version, PICO_SDK_VERSION_STRING);
-}
-
-void info(void) {
-    device_info_t info;
-    device_get_info(&info);
-    printf("name: %s\n", info.name);
-    printf("serial: %s\n", info.board_id);
-    printf("chip: manufacturer 0x%03x, part 0x%04x, revision %u\n", (unsigned)info.manufacturer, (unsigned)info.part, (unsigned)info.revision);
-    printf("pico-sdk: %s\n", info.sdk_version);
+    info->revision = (id & SYSINFO_CHIP_ID_REVISION_BITS)
+                    >> SYSINFO_CHIP_ID_REVISION_LSB;
+        strcpy(info->name, DEVICE_NAME);
+        pico_get_unique_board_id_string(info->board_id, sizeof(info->board_id));
+        strcpy(info->sdk_version, PICO_SDK_VERSION_STRING);
 }
