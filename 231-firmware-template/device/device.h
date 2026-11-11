@@ -12,11 +12,20 @@
 #define DEVICE_BOARD "unknown"
 #endif
 
-void device_info(void);
+void info(void);
 
-struct info_t
+typedef struct
 {
     uint32_t version;
     char name[13];
     uint8_t revision; 
-};
+} info_t;
+
+typedef struct{
+    char name[13];
+    char board_id[PICO_UNIQUE_BOARD_ID_SIZE_BYTES * 2 + 1];
+    uint32_t manufacturer;
+    uint32_t part;
+    uint32_t revision;
+    char sdk_version[16];
+} device_info_t;
