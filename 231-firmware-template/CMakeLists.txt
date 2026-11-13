@@ -12,6 +12,10 @@ add_compile_options(-Wall)
 
 add_subdirectory(../libs ${CMAKE_BINARY_DIR}/libs)
 
+target_compile_definitions(profiling PUBLIC
+    PROFILING_ENABLED=1
+)
+
 add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/api/api.c
@@ -37,6 +41,8 @@ target_link_libraries(${PROJECT_NAME}
     logging
     systime
 )
+
+
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     DEVICE_BOARD="${PICO_BOARD}"
