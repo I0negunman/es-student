@@ -1,6 +1,7 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include <stdint.h>
+#include <stdbool.h>
 #define STOPWATCH_COUNT 5
 
 // по умолчанию профилирование включено

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #ifndef DEVICE_BOARD
 #define DEVICE_BOARD "unknown"

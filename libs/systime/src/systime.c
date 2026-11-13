@@ -1,4 +1,5 @@
 #include "systime/systime.h"
+#include "pico/stdlib.h"
 
 uint64_t systime_us(void) {
     return time_us_64();
