@@ -1,4 +1,4 @@
-#include "stdio-text-protocol.h"
+#include "stdio-text-protocol/stdio-text-protocol.h"
 
 
 // обработчик команды: получает имя и аргументы

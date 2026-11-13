@@ -1,4 +1,5 @@
 #include "pi-task.h"
+#include "systime/systime.h"
 
 #define PI_TERMS_PER_CALL 100
 
@@ -21,7 +22,7 @@ bool pi_task_start(int n)
         pi_sum = 0.0;
         pi_sign = 1.0;
         calculation_state = CALCULATING;
-        time_start = time_us_64();
+        time_start = systime_us();
         return true;
     }
     else {
@@ -49,7 +50,7 @@ void pi_task_handle(void)
     if (pi_k == pi_n) {
         pi_result = 4.0 * pi_sum;
         calculation_state = READY;
-        time_finish = time_us_64();
+        time_finish = systime_us();
     }
 }
 

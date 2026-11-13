@@ -3,14 +3,14 @@
 #include <string.h>
 #include "hardware/regs/addressmap.h"
 #include "hardware/regs/sio.h"
-#include "profiling.h"
-#include "stdio-text-protocol.h"
-#include "api.h"
-#include "led-task.h"
-#include "button-task.h"
-#include "pi-task.h"
-#include "log.h"
-#include "device.h"
+#include "profiling/profiling.h"
+#include "stdio-text-protocol/stdio-text-protocol.h"
+#include "api/api.h"
+#include "led-task/led-task.h"
+#include "button-task/button-task.h"
+#include "pi-task/pi-task.h"
+#include "logging/log.h"
+#include "firmware.h"
 
 typedef enum
 {
@@ -28,7 +28,7 @@ int main()
     stdio_init_all();
     led_task_init();
     button_task_init();
-    LOG_INF("%s %s\n", DEVICE_NAME, FIRMWARE_VERSION);
+    LOG_INF("%s %s\n", FIRMWARE_NAME, FIRMWARE_VERSION);
     profiling_stopwatch_init(STOPWATCH_LOOP, "loop");
     profiling_stopwatch_init(STOPWATCH_COMMAND, "command");
     profiling_stopwatch_init(STOPWATCH_LED, "led");

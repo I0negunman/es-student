@@ -5,14 +5,16 @@
 #include <errno.h>
 #include <stdlib.h>
 #include "pico/stdlib.h"
-#include "api.h"
-#include "log.h"
-#include "device.h"
+#include "api/api.h"
+#include "logging/log.h"
+#include "device/device.h"
 #include "command.h"
-#include "profiling.h"
+#include "profiling/profiling.h"
 #include "led-task.h"
 #include "button-task.h"
 #include "pi-task.h"
+#include "systime/systime.h"
+#include "firmware.h"
 
 
 static bool parse_u32(const char *text, uint32_t *value)
@@ -39,6 +41,7 @@ static bool parse_u32(const char *text, uint32_t *value)
 
 void cmd_info(const command_t *) {
     device_info_t info;
+    strcpy(info.name, FIRMWARE_NAME);
     device_get_info(&info);
     printf("name: %s\n", info.name);
     printf("serial: %s\n", info.board_id);
@@ -47,7 +50,7 @@ void cmd_info(const command_t *) {
 }
 
 void cmd_uptime(const command_t *){
-   printf("uptime: %llu ms\n", time_us_64()/1000);
+   printf("uptime: %llu ms\n", systime_us()/1000);
 }
 
 // void cmd_main_time_exec(const command_t *) {

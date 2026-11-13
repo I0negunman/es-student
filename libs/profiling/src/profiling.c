@@ -1,5 +1,5 @@
-#include "profiling.h"
-#include "pico/stdlib.h"
+#include "profiling/profiling.h"
+
 // итерация около 2 мкс, за секунду их около 500 000;
 // ближайшая степень двойки 2^19 = 524 288, среднее помнит около секунды
 #define AVG_SHIFT 19
@@ -59,6 +59,8 @@ void profiling_start(uint32_t id) {
     stopwatches[id].start_time = time_us_32();
 }
 
+
+#if PROFILING_ENABLED
 void profiling_stop(uint32_t id) {
     uint32_t now = time_us_32();
     uint32_t elapsed = now - stopwatches[id].start_time;
@@ -68,6 +70,13 @@ void profiling_stop(uint32_t id) {
         stopwatches[id].measurements_max = elapsed;
     }
 }
+
+#else
+// профилирование выключено: вызовы ничего не делают
+#define profiling_start(id) ((void)0)
+#define profiling_stop(id) ((void)0)
+#endif
+
 
 bool profiling_get(uint32_t id, profiling_result_t *result) {
     if (stopwatches[id].name == NULL) {

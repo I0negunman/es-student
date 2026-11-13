@@ -1,6 +1,5 @@
-#include "stdio-text-protocol.h"
+#include "stdio-text-protocol/stdio-text-protocol.h"
 #include "pico/stdlib.h"
-#include "log.h"
 #include <stdio.h>
 
 char line[STDIO_TEXT_PROTOCOL_LINE_SIZE];

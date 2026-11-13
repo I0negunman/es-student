@@ -2,6 +2,7 @@
 #include "button-task.h"
 #include "pico/stdlib.h"
 #include "led-task.h"
+#include "systime/systime.h"
 
 typedef enum {
     PRESSED,
@@ -31,7 +32,7 @@ void button_task_handle(void)
     {
     case RELEASED:
         if (!not_pressed) {
-            pressed_time = time_us_64();
+            pressed_time = systime_us();
             button_state = IF_PRESSED;
             return;
         }
@@ -42,7 +43,7 @@ void button_task_handle(void)
             return;
         }
         if (!not_pressed) {
-            if ((time_us_64() - pressed_time) > 20000) {
+            if ((systime_us() - pressed_time) > 20000) {
                 button_state = PRESSED;
                 led_task_next_state();
                 counter += 1;
@@ -52,7 +53,7 @@ void button_task_handle(void)
         return;
     case PRESSED:
         if (not_pressed) {
-            unpressed_time = time_us_64();
+            unpressed_time = systime_us();
             button_state = IF_RELEASED;
             return;
         }
@@ -63,7 +64,7 @@ void button_task_handle(void)
             return;
         }
         if (not_pressed) {
-            if ((time_us_64() - unpressed_time) > 20000) {
+            if ((systime_us() - unpressed_time) > 20000) {
                 button_state = RELEASED;
             }
             return;
