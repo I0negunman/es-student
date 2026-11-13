@@ -1,4 +1,5 @@
 #include "logging/log.h"
+#include "stdio.h"
 
 void log_prefix(const char *level, const char *function, int line)
 {
