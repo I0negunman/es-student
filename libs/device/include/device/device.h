@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pico/unique_id.h"
+#include "pico/stdlib.h"
 
 #ifndef DEVICE_BOARD
 #define DEVICE_BOARD "unknown"
@@ -17,7 +17,7 @@ typedef struct
 
 typedef struct{
     char name[13];
-    char board_id[PICO_UNIQUE_BOARD_ID_SIZE_BYTES * 2 + 1];
+    char board_id[17];
     uint32_t manufacturer;
     uint32_t part;
     uint32_t revision;

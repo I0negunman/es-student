@@ -1,5 +1,4 @@
 #pragma once
-
 #include "pico/stdlib.h"
 
 uint64_t systime_us(void);

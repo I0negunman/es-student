@@ -6,6 +6,7 @@
 #include "hardware/regs/addressmap.h"
 #include "hardware/structs/sysinfo.h"
 #include "string.h"
+#include "pico/unique_id.h"
 
 void device_get_info(device_info_t *info) {
     volatile uint32_t *chip_id = (uint32_t *)(SYSINFO_BASE + SYSINFO_CHIP_ID_OFFSET);
