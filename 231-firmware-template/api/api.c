@@ -53,15 +53,6 @@ void cmd_uptime(const command_t *){
    printf("uptime: %llu ms\n", systime_us()/1000);
 }
 
-// void cmd_main_time_exec(const command_t *) {
-//    printf("iteration avg %.2f us, max %u us\n", profiling_avg_us(), (unsigned)profiling_max_us());
-// }
-
-// void cmd_main_time_reset(const command_t *) {
-//    profiling_reset_max();
-//    printf("max reset\n");
-// }
-
 void cmd_led_enable(const command_t *command) {
     led_task_set_state(LED_STATE_ON);
     print_led_state();
@@ -73,12 +64,17 @@ void cmd_led_disable(const command_t *command) {
 }
 
 void cmd_profiling(const command_t *command) {
-    profiling_result_t result;
-    for (uint32_t i = 0; i < STOPWATCH_COUNT; i++) {
-        if (profiling_get(i, &result)) {
-            printf("%-16s count %lu, mean %.2f us, max %lu us\n", result.name, result.measurements_count,
-                   (float)result.measurements_sum / result.measurements_count, result.measurements_max);
+    if (PROFILING_ENABLED) {
+        profiling_result_t result;
+        for (uint32_t i = 0; i < STOPWATCH_COUNT; i++) {
+            if (profiling_get(i, &result)) {
+                printf("%-16s count %lu, mean %.2f us, max %lu us\n", result.name, result.measurements_count,
+                    (float)result.measurements_sum / result.measurements_count, result.measurements_max);
+            }
         }
+    }
+    else {
+        printf("profiling is disabled in this build\n");
     }
 }
 
