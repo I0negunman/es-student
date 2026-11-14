@@ -1,3 +1,5 @@
+#pragma once
+
 #define FIRMWARE_NAME "es-led-module"
 #define FIRMWARE_VERSION "1.0.0"
 
