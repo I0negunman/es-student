@@ -38,7 +38,7 @@ static bool parse_u32(const char *text, uint32_t *value)
 }
 
 
-void print_led_state(void) {
+static void print_led_state(void) {
     switch (led_task_get_state()) {
     case LED_STATE_OFF:
         printf("led: off, period %lu ms\n", led_task_get_period_ms());
