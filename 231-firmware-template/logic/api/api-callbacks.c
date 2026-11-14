@@ -108,9 +108,13 @@ static void cmd_pi_start(const command_t *command) {
     uint32_t calc_pi_terms = 1000000;
     if (command->argc > 0)
     {
-        if (command->argc != 1 || !parse_u32(command->argv[0], &calc_pi_terms) || calc_pi_terms == 0)
+        if (command->argc != 1 || !parse_u32(command->argv[0], &calc_pi_terms))
         {
             printf("error: usage pi_start [terms]\n");
+            return;
+        }
+        if (calc_pi_terms == 0) {
+            printf("error: terms must be greater than 0\n");
             return;
         }
     }
@@ -147,10 +151,10 @@ static void cmd_led_blink(const command_t *command) {
 
 static void cmd_button(const command_t *command) {
     if (button_task_is_pressed()) {
-        printf("button: pressed, pressed %ld\n", button_task_get_press_count());
+        printf("button: pressed, presses %ld\n", button_task_get_press_count());
         return;
     }
-    printf("button: released, pressed %ld\n", button_task_get_press_count());
+    printf("button: released, presses %ld\n", button_task_get_press_count());
     return;
 }
 

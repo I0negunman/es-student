@@ -73,11 +73,10 @@ bool button_task_is_pressed(void) {
     {
         case RELEASED:
         case IF_PRESSED:
-            return 0;
+            return 1;
         case PRESSED:
         case IF_RELEASED:
-            printf("released, presses %ld\n", counter);
-            return 1;
+            return 0;
     }
     return 0;
 }
