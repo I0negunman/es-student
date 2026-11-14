@@ -23,16 +23,18 @@ int main()
 {
     led_task_init();
     LOG_INF("%s %s\n", FIRMWARE_NAME, FIRMWARE_VERSION);
+    #if PROFILING_ENABLED
     profiling_stopwatch_init(STOPWATCH_LOOP, "loop");
     profiling_stopwatch_init(STOPWATCH_COMMAND, "command");
     profiling_stopwatch_init(STOPWATCH_LED, "led");
     profiling_stopwatch_init(STOPWATCH_BUTTON, "button");
     profiling_stopwatch_init(STOPWATCH_PI, "pi");
-
+    #endif
     button_task_init(led_task_next_state);
 
     while (1)
     {
+        #if PROFILING_ENABLED
         profiling_start(STOPWATCH_LOOP);
         profiling_start(STOPWATCH_LED);
         led_task_handle();
@@ -46,6 +48,12 @@ int main()
         profiling_start(STOPWATCH_COMMAND);
         const command_t *command = stdio_text_protocol_handle();
         profiling_stop(STOPWATCH_COMMAND);
+        #else
+        led_task_handle();
+        button_task_handle();
+        pi_task_handle();
+        const command_t *command = stdio_text_protocol_handle();
+        #endif
         if (command != NULL)
         {
             api_handle(command);

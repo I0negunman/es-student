@@ -118,8 +118,10 @@ static void cmd_profiling(const command_t *command) {
 }
 
 static void cmd_profiling_reset(const command_t *command) {
+    #if PROFILING_ENABLED
     profiling_reset();
     printf("profiling reset\n");
+    #endif
 }
 
 static void cmd_pi_start(const command_t *command) {

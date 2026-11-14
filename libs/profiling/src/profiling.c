@@ -1,18 +1,11 @@
 #include "profiling/profiling.h"
+
+#if PROFILING_ENABLED
+
 #include <stddef.h>
 #include "systime/systime.h"
-#include <stdio.h>
-
-
-
-// итерация около 2 мкс, за секунду их около 500 000;
-// ближайшая степень двойки 2^19 = 524 288, среднее помнит около секунды
-#define AVG_SHIFT 19
-// замер в 1/256 долях микросекунды, чтобы среднее не теряло дробную часть
-#define FRACTION_SHIFT 8
 
 static profiling_result_t stopwatches[STOPWATCH_COUNT];
-
 
 void profiling_stopwatch_init(uint32_t id, const char *name) {
     stopwatches[id].name = name;
@@ -22,8 +15,6 @@ void profiling_stopwatch_init(uint32_t id, const char *name) {
     stopwatches[id].start_time = 0;
 }
 
-#if PROFILING_ENABLED
-
 void profiling_start(uint32_t id) {
     stopwatches[id].start_time = systime_us();
 }
@@ -31,21 +22,20 @@ void profiling_start(uint32_t id) {
 void profiling_stop(uint32_t id) {
     uint32_t now = systime_us();
     uint32_t elapsed = now - stopwatches[id].start_time;
+
     stopwatches[id].measurements_count++;
     stopwatches[id].measurements_sum += elapsed;
+
     if (elapsed > stopwatches[id].measurements_max) {
         stopwatches[id].measurements_max = elapsed;
     }
 }
 
-#else
-#endif
-
-
 bool profiling_get(uint32_t id, profiling_result_t *result) {
     if (stopwatches[id].name == NULL) {
         return false;
     }
+
     *result = stopwatches[id];
     return true;
 }
@@ -57,3 +47,5 @@ void profiling_reset(void) {
         stopwatches[i].measurements_max = 0;
     }
 }
+
+#endif
