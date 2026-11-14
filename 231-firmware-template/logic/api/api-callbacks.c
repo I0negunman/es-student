@@ -59,9 +59,13 @@ static void cmd_led_period(const command_t *command)
 
 static void cmd_info(const command_t *) {
     device_info_t info;
-    strcpy(info.name, FIRMWARE_NAME);
+    snprintf(info.name, sizeof(info.name), "%s", FIRMWARE_NAME);
     device_get_info(&info);
     printf("name: %s\n", info.name);
+    printf("version: %s\n", FIRMWARE_VERSION);
+    printf("project: %s\n", FIRMWARE_PROJECT);
+    printf("repo: %s\n", FIRMWARE_REPO);
+    printf("board: %s\n", DEVICE_BOARD);
     printf("serial: %s\n", info.board_id);
     printf("chip: manufacturer 0x%03x, part 0x%04x, revision %u\n", (unsigned)info.manufacturer, (unsigned)info.part, (unsigned)info.revision);
     printf("pico-sdk: %s\n", info.sdk_version);

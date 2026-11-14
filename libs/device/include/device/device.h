@@ -17,7 +17,7 @@ typedef struct
 } info_t;
 
 typedef struct{
-    char name[13];
+    char name[14];
     char board_id[17];
     uint32_t manufacturer;
     uint32_t part;
