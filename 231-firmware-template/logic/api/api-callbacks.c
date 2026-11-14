@@ -90,7 +90,7 @@ static void cmd_profiling(const command_t *command) {
         profiling_result_t result;
         for (uint32_t i = 0; i < STOPWATCH_COUNT; i++) {
             if (profiling_get(i, &result)) {
-                printf("%-16s count %lu, mean %.2f us, max %lu us\n", result.name, result.measurements_count,
+                printf("%-10s count %lu, mean %.2f us, max %lu us\n", result.name, result.measurements_count,
                     (float)result.measurements_sum / result.measurements_count, result.measurements_max);
             }
         }
