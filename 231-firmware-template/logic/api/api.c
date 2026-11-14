@@ -14,9 +14,6 @@
 #include <errno.h>
 #include <stdlib.h>
 
-
-
-
 void api_handle(const command_t *command)
 {
     if (command->truncated) {
@@ -43,4 +40,3 @@ void api_handle(const command_t *command)
     }
     printf("error: unknown command '%s', try help\n", command->name);
 }
-

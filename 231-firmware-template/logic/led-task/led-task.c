@@ -12,18 +12,13 @@ static uint64_t last_toggle_us;
 
 // Вспомогательная функция: из других файлов её не вызвать
 
-void print_led_state(void) {
-    switch (led_state) {
-    case LED_STATE_OFF:
-        printf("led: off, period %llu ms\n", half_period_us * 2 / 1000);
-        break;
-    case LED_STATE_ON:
-        printf("led: on, period %llu ms\n", half_period_us * 2 / 1000);
-        break;
-    case LED_STATE_BLINK:
-        printf("led: blink, period %llu ms\n", half_period_us * 2 / 1000);
-        break;
-    }
+uint32_t led_task_get_period_ms(void) {
+    return (uint32_t)(half_period_us * 2 / 1000);
+}
+
+led_state_t led_task_get_state(void)
+{
+    return led_state;
 }
 
 bool led_task_set_period_ms(uint32_t period_ms)

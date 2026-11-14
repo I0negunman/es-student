@@ -14,6 +14,7 @@
 #include "systime/systime.h"
 
 
+
 static bool parse_u32(const char *text, uint32_t *value)
 {
     // strtoul приняла бы и знак: из "-1" получилось бы 4294967295
@@ -35,6 +36,22 @@ static bool parse_u32(const char *text, uint32_t *value)
     *value = (uint32_t)number;
     return true;
 }
+
+
+void print_led_state(void) {
+    switch (led_task_get_state()) {
+    case LED_STATE_OFF:
+        printf("led: off, period %lu ms\n", led_task_get_period_ms());
+        break;
+    case LED_STATE_ON:
+        printf("led: on, period %lu ms\n", led_task_get_period_ms());
+        break;
+    case LED_STATE_BLINK:
+        printf("led: blink, period %lu ms\n", led_task_get_period_ms());
+        break;
+    }
+}
+
 
 static void cmd_led_period(const command_t *command)
 {
@@ -102,6 +119,7 @@ static void cmd_profiling(const command_t *command) {
 
 static void cmd_profiling_reset(const command_t *command) {
     profiling_reset();
+    printf("profiling reset\n");
 }
 
 static void cmd_pi_start(const command_t *command) {

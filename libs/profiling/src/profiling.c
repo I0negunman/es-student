@@ -22,12 +22,15 @@ void profiling_stopwatch_init(uint32_t id, const char *name) {
     stopwatches[id].start_time = 0;
 }
 
+
+
+
+#if PROFILING_ENABLED
+
 void profiling_start(uint32_t id) {
     stopwatches[id].start_time = systime_us();
 }
 
-
-#if PROFILING_ENABLED
 void profiling_stop(uint32_t id) {
     uint32_t now = systime_us();
     uint32_t elapsed = now - stopwatches[id].start_time;
@@ -59,5 +62,4 @@ void profiling_reset(void) {
         stopwatches[i].measurements_sum = 0;
         stopwatches[i].measurements_max = 0;
     }
-    printf("profiling reset\n");
 }

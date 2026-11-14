@@ -13,10 +13,6 @@ add_compile_options(-Wall)
 # Подключаем внешние библиотеки
 add_subdirectory(../libs ${CMAKE_BINARY_DIR}/libs)
 
-target_compile_definitions(profiling PUBLIC
-    PROFILING_ENABLED=1
-)
-
 
 # ==========================================
 # PLATFORM: взаимодействие с железом
