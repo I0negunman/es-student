@@ -81,6 +81,10 @@ target_compile_definitions(device PUBLIC
     DEVICE_BOARD="${PICO_BOARD}"
 )
 
+target_compile_definitions(profiling PUBLIC
+    PROFILING_ENABLED=0
+)
+
 pico_enable_stdio_usb(${PROJECT_NAME} 1)
 pico_enable_stdio_uart(${PROJECT_NAME} 0)
 
