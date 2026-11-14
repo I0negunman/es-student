@@ -34,7 +34,6 @@ int main()
     while (1)
     {
         profiling_start(STOPWATCH_LOOP);
-        // profiling_iteration();
         profiling_start(STOPWATCH_LED);
         led_task_handle();
         profiling_stop(STOPWATCH_LED);

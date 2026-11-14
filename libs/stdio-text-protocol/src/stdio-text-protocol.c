@@ -26,7 +26,7 @@ const command_t *stdio_text_protocol_handle(void)
         if (line_length > 0)
         {
             command = (command_t){0};
-                for (int p = 0; p < line_length - 1; p++)
+                for (int p = 0; p < line_length; p++)
                 {
                     if (line[p] == ' ')
                     {
@@ -43,6 +43,7 @@ const command_t *stdio_text_protocol_handle(void)
                             else
                             {
                                 command.truncated = true;
+                                line_length = 0;
                                 return &command;
                             }
                         }   

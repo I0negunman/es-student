@@ -104,7 +104,7 @@ static void cmd_pi_start(const command_t *command) {
     uint32_t calc_pi_terms = 1000000;
     if (command->argc > 0)
     {
-        if (command->argc != 1 || !parse_u32(command->argv[0], &calc_pi_terms))
+        if (command->argc != 1 || !parse_u32(command->argv[0], &calc_pi_terms) || calc_pi_terms == 0)
         {
             printf("error: usage pi_start [terms]\n");
             return;
@@ -153,8 +153,6 @@ static void cmd_button(const command_t *command) {
 const api_command_t api_commands[] = {
     { "info", "device passport", cmd_info },
     { "uptime", "time since reset", cmd_uptime },
-    // { "main_time_exec", "superloop iteration: average and maximum", cmd_main_time_exec },
-    // { "main_time_reset", "reset maximum iteration", cmd_main_time_reset },
     { "led_enable", "turn on LED", cmd_led_enable },
     { "led_disable", "turn off LED", cmd_led_disable },
     { "led_blink", "blink LED", cmd_led_blink },

@@ -11,5 +11,5 @@ target_link_libraries(profiling PRIVATE
 )
 
 target_compile_definitions(profiling PUBLIC
-    PROFILING_ENABLED=1
+    PROFILING_ENABLED=0
 )
