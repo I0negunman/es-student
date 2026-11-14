@@ -1,6 +1,8 @@
 #include "profiling/profiling.h"
 #include <stddef.h>
 #include "systime/systime.h"
+#include <stdio.h>
+
 
 
 // итерация около 2 мкс, за секунду их около 500 000;
@@ -57,4 +59,5 @@ void profiling_reset(void) {
         stopwatches[i].measurements_sum = 0;
         stopwatches[i].measurements_max = 0;
     }
+    printf("profiling reset\n");
 }
