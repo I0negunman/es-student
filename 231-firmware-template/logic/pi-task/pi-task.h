@@ -1,6 +1,5 @@
 #pragma once
-
-#include "pico/stdlib.h"
+#include <stdint.h>
 
 bool pi_task_start(int n);
 void pi_task_handle(void);

@@ -1,8 +1,5 @@
-#include "pico/stdlib.h"
 #include <stdio.h>
 #include <string.h>
-#include "hardware/regs/addressmap.h"
-#include "hardware/regs/sio.h"
 #include "profiling/profiling.h"
 #include "stdio-text-protocol/stdio-text-protocol.h"
 #include "api/api.h"
@@ -24,16 +21,15 @@ typedef enum
 
 int main()
 {
-    // profiling_init();
-    stdio_init_all();
     led_task_init();
-    button_task_init();
     LOG_INF("%s %s\n", FIRMWARE_NAME, FIRMWARE_VERSION);
     profiling_stopwatch_init(STOPWATCH_LOOP, "loop");
     profiling_stopwatch_init(STOPWATCH_COMMAND, "command");
     profiling_stopwatch_init(STOPWATCH_LED, "led");
     profiling_stopwatch_init(STOPWATCH_BUTTON, "button");
     profiling_stopwatch_init(STOPWATCH_PI, "pi");
+
+    button_task_init(led_task_next_state);
 
     while (1)
     {

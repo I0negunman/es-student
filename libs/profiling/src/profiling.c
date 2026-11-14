@@ -1,5 +1,7 @@
 #include "profiling/profiling.h"
-#include "pico/stdlib.h"
+#include <stddef.h>
+#include "systime/systime.h"
+
 
 // итерация около 2 мкс, за секунду их около 500 000;
 // ближайшая степень двойки 2^19 = 524 288, среднее помнит около секунды
@@ -16,12 +18,12 @@ static uint64_t avg_sum = 0;
 
 void profiling_init(void)
 {
-    previous_us = time_us_32();
+    previous_us = systime_us();
 }
 
 void profiling_iteration(void)
 {
-    uint32_t now_us = time_us_32();
+    uint32_t now_us = systime_us();
     uint32_t iteration_us = now_us - previous_us;
     previous_us = now_us;
 
@@ -57,13 +59,13 @@ void profiling_stopwatch_init(uint32_t id, const char *name) {
 }
 
 void profiling_start(uint32_t id) {
-    stopwatches[id].start_time = time_us_32();
+    stopwatches[id].start_time = systime_us();
 }
 
 
 #if PROFILING_ENABLED
 void profiling_stop(uint32_t id) {
-    uint32_t now = time_us_32();
+    uint32_t now = systime_us();
     uint32_t elapsed = now - stopwatches[id].start_time;
     stopwatches[id].measurements_count++;
     stopwatches[id].measurements_sum += elapsed;

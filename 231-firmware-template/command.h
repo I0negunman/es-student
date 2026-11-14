@@ -1,6 +1,5 @@
 #pragma once
-
-#include "pico/types.h"
+#include <stdint.h>
 
 typedef void (*command_handler_t)(void);
 
@@ -11,4 +10,4 @@ struct command_t
 };
 
 extern const struct command_t commands[];
-extern const uint command_count;
+extern const uint64_t command_count;

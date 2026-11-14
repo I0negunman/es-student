@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdint.h>
+
 #include "led-task.h"
-#include "pico/stdlib.h"
 #include "systime/systime.h"
+#include "platform/platform.h"
 
 // Состояние задачи: внутреннее связывание, только для этого файла
 static led_state_t led_state;
@@ -9,10 +11,6 @@ static uint64_t half_period_us;
 static uint64_t last_toggle_us;
 
 // Вспомогательная функция: из других файлов её не вызвать
-static void led_set(bool on)
-{
-    gpio_put(PICO_DEFAULT_LED_PIN, on);
-}
 
 void print_led_state(void) {
     printf("led state: ");
@@ -43,8 +41,7 @@ bool led_task_set_period_ms(uint32_t period_ms)
 
 void led_task_init(void)
 {
-    gpio_init(PICO_DEFAULT_LED_PIN);
-    gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
+    platform_init();
     led_task_set_state(LED_STATE_BLINK);
     led_task_set_period_ms(1000);
 }
@@ -56,10 +53,10 @@ void led_task_set_state(led_state_t state)
     // Действие при входе: выполняется один раз, в момент перехода
     switch (led_state) {
     case LED_STATE_OFF:
-        led_set(false);
+        platform_led_set(false);
         break;
     case LED_STATE_ON:
-        led_set(true);
+        platform_led_set(true);
         break;
     case LED_STATE_BLINK:
         // Первое переключение — на ближайшей итерации
@@ -77,7 +74,7 @@ void led_task_handle(void)
         break;
     case LED_STATE_BLINK:
         if (systime_period_elapsed(&last_toggle_us, half_period_us*2)) {
-            led_set(!gpio_get(PICO_DEFAULT_LED_PIN));
+            platform_led_toggle();
         }
         break;
     }

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "button-task.h"
-#include "pico/stdlib.h"
-#include "led-task.h"
+#include "led-task/led-task.h"
 #include "systime/systime.h"
+#include "platform/platform.h"
 
 typedef enum {
     PRESSED,
@@ -12,21 +12,14 @@ typedef enum {
 } button_state_t;
 
 static button_state_t button_state;
-static const uint BUTTON_PIN = 15;
 static uint64_t pressed_time;
 static uint64_t unpressed_time;
 static uint32_t counter = 0;
-
-void button_task_init() {
-    gpio_init(BUTTON_PIN);
-    gpio_set_dir(BUTTON_PIN, GPIO_IN);
-    gpio_pull_up(BUTTON_PIN);
-    button_state = RELEASED;
-}
+static button_task_callback_t on_press_callback;
 
 void button_task_handle(void)
 {
-    bool not_pressed = gpio_get(BUTTON_PIN);
+    bool not_pressed = platform_button_read();
      
     switch (button_state)
     {
@@ -45,7 +38,7 @@ void button_task_handle(void)
         if (!not_pressed) {
             if ((systime_us() - pressed_time) > 20000) {
                 button_state = PRESSED;
-                led_task_next_state();
+                on_press_callback();
                 counter += 1;
             }
             return;
@@ -92,4 +85,9 @@ bool button_task_is_pressed(void) {
 uint32_t button_task_get_press_count(void) {
     return counter;
 }
+
+void button_task_init(button_task_callback_t on_press) {
+    on_press_callback = on_press;
+}
+
 

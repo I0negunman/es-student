@@ -1,20 +1,17 @@
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include "pico/stdlib.h"
-#include "api/api.h"
-#include "logging/log.h"
-#include "device/device.h"
-#include "command.h"
-#include "profiling/profiling.h"
-#include "led-task.h"
-#include "button-task.h"
-#include "pi-task.h"
-#include "systime/systime.h"
+#include <string.h>
+
+#include "api.h"
+#include "led-task/led-task.h"
+#include "button-task/button-task.h"
+#include "pi-task/pi-task.h"
+#include "profiling/profiling.h"  
+#include "device/device.h"  
 #include "firmware.h"
+#include "systime/systime.h"
 
 
 static bool parse_u32(const char *text, uint32_t *value)
@@ -39,101 +36,6 @@ static bool parse_u32(const char *text, uint32_t *value)
     return true;
 }
 
-void cmd_info(const command_t *) {
-    device_info_t info;
-    strcpy(info.name, FIRMWARE_NAME);
-    device_get_info(&info);
-    printf("name: %s\n", info.name);
-    printf("serial: %s\n", info.board_id);
-    printf("chip: manufacturer 0x%03x, part 0x%04x, revision %u\n", (unsigned)info.manufacturer, (unsigned)info.part, (unsigned)info.revision);
-    printf("pico-sdk: %s\n", info.sdk_version);
-}
-
-void cmd_uptime(const command_t *){
-   printf("uptime: %llu ms\n", systime_us()/1000);
-}
-
-void cmd_led_enable(const command_t *command) {
-    led_task_set_state(LED_STATE_ON);
-    print_led_state();
-}
-
-void cmd_led_disable(const command_t *command) {
-    led_task_set_state(LED_STATE_OFF);
-    print_led_state();
-}
-
-void cmd_profiling(const command_t *command) {
-    if (PROFILING_ENABLED) {
-        profiling_result_t result;
-        for (uint32_t i = 0; i < STOPWATCH_COUNT; i++) {
-            if (profiling_get(i, &result)) {
-                printf("%-16s count %lu, mean %.2f us, max %lu us\n", result.name, result.measurements_count,
-                    (float)result.measurements_sum / result.measurements_count, result.measurements_max);
-            }
-        }
-    }
-    else {
-        printf("profiling is disabled in this build\n");
-    }
-}
-
-void cmd_profiling_reset(const command_t *command) {
-    profiling_reset();
-}
-
-void cmd_pi_start(const command_t *command) {
-    uint32_t calc_pi_terms = 1000000;
-    if (command->argc > 0)
-    {
-        if (command->argc != 1 || !parse_u32(command->argv[0], &calc_pi_terms))
-        {
-            printf("error: usage pi_start [terms]\n");
-            return;
-        }
-    }
-    if (!pi_task_start(calc_pi_terms)) {
-        printf("error: pi is busy\n");
-    }
-    else {
-        printf("pi: started, %ld terms\n", calc_pi_terms);
-    }
-}
-
-void cmd_pi(const command_t *command) {
-    double pi_result;
-    uint64_t pi_time;
-    switch (calculation_state) {
-    case DIDNT_START:
-        printf("pi: not started\n");
-        break;
-    case CALCULATING:
-        printf("pi: running\n");
-        break;
-    case READY:
-        pi_task_get_result(&pi_result, &pi_time);
-        // Первое переключение — на ближайшей итерации
-        printf("pi: %f in %lld ms\n", pi_result, pi_time / 1000);
-        break;
-    }   
-}
-
-void cmd_led_blink(const command_t *command) {
-    led_task_set_state(LED_STATE_BLINK);
-    print_led_state();
-}
-
-void cmd_button(const command_t *command) {
-    if (button_task_is_pressed()) {
-        printf("button: pressed, pressed %ld\n", button_task_get_press_count());
-        return;
-    }
-    printf("button: released, pressed %ld\n", button_task_get_press_count());
-    return;
-}
-
-
-
 static void cmd_led_period(const command_t *command)
 {
     uint32_t period_ms;
@@ -155,6 +57,99 @@ static void cmd_led_period(const command_t *command)
     print_led_state();
 }
 
+static void cmd_info(const command_t *) {
+    device_info_t info;
+    strcpy(info.name, FIRMWARE_NAME);
+    device_get_info(&info);
+    printf("name: %s\n", info.name);
+    printf("serial: %s\n", info.board_id);
+    printf("chip: manufacturer 0x%03x, part 0x%04x, revision %u\n", (unsigned)info.manufacturer, (unsigned)info.part, (unsigned)info.revision);
+    printf("pico-sdk: %s\n", info.sdk_version);
+}
+
+static void cmd_uptime(const command_t *){
+   printf("uptime: %llu ms\n", systime_us()/1000);
+}
+
+static void cmd_led_enable(const command_t *command) {
+    led_task_set_state(LED_STATE_ON);
+    print_led_state();
+}
+
+static void cmd_led_disable(const command_t *command) {
+    led_task_set_state(LED_STATE_OFF);
+    print_led_state();
+}
+
+static void cmd_profiling(const command_t *command) {
+    if (PROFILING_ENABLED) {
+        profiling_result_t result;
+        for (uint32_t i = 0; i < STOPWATCH_COUNT; i++) {
+            if (profiling_get(i, &result)) {
+                printf("%-16s count %lu, mean %.2f us, max %lu us\n", result.name, result.measurements_count,
+                    (float)result.measurements_sum / result.measurements_count, result.measurements_max);
+            }
+        }
+    }
+    else {
+        printf("profiling is disabled in this build\n");
+    }
+}
+
+static void cmd_profiling_reset(const command_t *command) {
+    profiling_reset();
+}
+
+static void cmd_pi_start(const command_t *command) {
+    uint32_t calc_pi_terms = 1000000;
+    if (command->argc > 0)
+    {
+        if (command->argc != 1 || !parse_u32(command->argv[0], &calc_pi_terms))
+        {
+            printf("error: usage pi_start [terms]\n");
+            return;
+        }
+    }
+    if (!pi_task_start(calc_pi_terms)) {
+        printf("error: pi is busy\n");
+    }
+    else {
+        printf("pi: started, %ld terms\n", calc_pi_terms);
+    }
+}
+
+static void cmd_pi(const command_t *command) {
+    double pi_result;
+    uint64_t pi_time;
+    switch (calculation_state) {
+    case DIDNT_START:
+        printf("pi: not started\n");
+        break;
+    case CALCULATING:
+        printf("pi: running\n");
+        break;
+    case READY:
+        pi_task_get_result(&pi_result, &pi_time);
+        // Первое переключение — на ближайшей итерации
+        printf("pi: %f in %lld ms\n", pi_result, pi_time / 1000);
+        break;
+    }   
+}
+
+static void cmd_led_blink(const command_t *command) {
+    led_task_set_state(LED_STATE_BLINK);
+    print_led_state();
+}
+
+static void cmd_button(const command_t *command) {
+    if (button_task_is_pressed()) {
+        printf("button: pressed, pressed %ld\n", button_task_get_press_count());
+        return;
+    }
+    printf("button: released, pressed %ld\n", button_task_get_press_count());
+    return;
+}
+
 const api_command_t api_commands[] = {
     { "info", "device passport", cmd_info },
     { "uptime", "time since reset", cmd_uptime },
@@ -171,32 +166,4 @@ const api_command_t api_commands[] = {
     { "profiling_reset", "reset profiling results", cmd_profiling_reset},
 };
 
-const uint api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
-
-void api_handle(const command_t *command)
-{
-    if (command->truncated) {
-        printf("error: command longer than 63 characters or 4 arguments\n");
-        return;
-    }
-
-    if (strcmp(command->name, "help") == 0) {
-        printf("help             list of commands\n");
-        for (uint32_t i = 0; i < api_command_count; i++) 
-        {
-            printf("%-16s %s\n", api_commands[i].name, api_commands[i].help);
-        }
-        return;
-    }
-
-    for (uint32_t i = 0; i < api_command_count; i++)
-    {
-        if (strcmp(command->name, api_commands[i].name) == 0)
-        {
-            api_commands[i].callback(command);
-            return;
-        }
-    }
-    printf("error: unknown command '%s', try help\n", command->name);
-}
-
+const uint64_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);

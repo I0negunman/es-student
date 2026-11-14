@@ -7,7 +7,7 @@ target_include_directories(profiling PUBLIC
 )
 
 target_link_libraries(profiling PRIVATE
-    pico_stdlib
+    systime
 )
 
 target_compile_definitions(profiling PUBLIC
