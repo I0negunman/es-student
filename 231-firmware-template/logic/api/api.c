@@ -1,9 +1,3 @@
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <errno.h>
-#include <stdlib.h>
 #include "api.h"
 #include "api-commands.h"
 
@@ -12,6 +6,14 @@
 #include "command.h"
 #include "systime/systime.h"
 #include "firmware.h"
+
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <errno.h>
+#include <stdlib.h>
+
 
 
 

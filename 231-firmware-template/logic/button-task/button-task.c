@@ -1,8 +1,8 @@
-#include <stdio.h>
 #include "button-task.h"
-#include "led-task/led-task.h"
 #include "systime/systime.h"
 #include "platform/platform.h"
+
+#include <stdio.h>
 
 typedef enum {
     PRESSED,

@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <stdint.h>
-
 #include "led-task.h"
 #include "systime/systime.h"
 #include "platform/platform.h"
+
+#include <stdio.h>
+#include <stdint.h>
 
 // Состояние задачи: внутреннее связывание, только для этого файла
 static led_state_t led_state;
