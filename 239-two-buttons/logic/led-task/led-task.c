@@ -1,0 +1,101 @@
+#include "led-task.h"
+#include "systime/systime.h"
+#include "platform/platform.h"
+
+#include <stdio.h>
+#include <stdint.h>
+
+// Состояние задачи: внутреннее связывание, только для этого файла
+static led_state_t led_state;
+static uint64_t half_period_us;
+static uint64_t last_toggle_us;
+
+// Вспомогательная функция: из других файлов её не вызвать
+
+uint32_t led_task_get_period_ms(void) {
+    return (uint32_t)(half_period_us * 2 / 1000);
+}
+
+led_state_t led_task_get_state(void)
+{
+    return led_state;
+}
+
+bool led_task_set_period_ms(uint32_t period_ms)
+{
+    // С нулевым полупериодом светодиод переключался бы
+    // на каждой итерации: такой период не принимается
+    if (period_ms == 0) {
+        return false;
+    }
+
+    half_period_us = (uint64_t)period_ms * 1000 / 2;
+    return true;
+}
+
+void led_task_init(void)
+{
+    platform_init();
+    led_task_set_state(LED_STATE_BLINK);
+    led_task_set_period_ms(1000);
+}
+
+void led_task_set_state(led_state_t state)
+{
+    led_state = state;
+
+    // Действие при входе: выполняется один раз, в момент перехода
+    switch (led_state) {
+    case LED_STATE_OFF:
+        platform_led_set(false);
+        break;
+    case LED_STATE_ON:
+        platform_led_set(true);
+        break;
+    case LED_STATE_BLINK:
+        // Первое переключение — на ближайшей итерации
+        last_toggle_us = 0;
+        break;
+    }
+}
+
+void led_task_handle(void)
+{
+    switch (led_state) {
+    case LED_STATE_OFF:
+    case LED_STATE_ON:
+        // Светодиод установлен при входе в состояние, делать нечего
+        break;
+    case LED_STATE_BLINK:
+        if (systime_period_elapsed(&last_toggle_us, half_period_us*2)) {
+            platform_led_toggle();
+        }
+        break;
+    }
+}
+
+void led_task_next_state(void) {
+    switch (led_state) {
+        case LED_STATE_OFF:
+            led_task_set_state(LED_STATE_ON);
+            return;
+        case LED_STATE_ON:
+            led_task_set_state(LED_STATE_BLINK);
+            return;
+        case LED_STATE_BLINK:
+            led_task_set_state(LED_STATE_OFF);
+    }
+}
+
+void led_blink_next_state(void) {
+    switch (half_period_us) {
+        case (250):
+            led_task_set_period_ms(500);
+            return;
+        case (500):
+            led_task_set_period_ms(1000);
+            return;
+        case (1000):
+            led_task_set_state(250);
+    }
+}
