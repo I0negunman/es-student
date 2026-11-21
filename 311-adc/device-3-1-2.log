@@ -3,28 +3,44 @@
 устройство: 2e8a:000a
 серийный номер: E66098F29B1D7339
 порт: /dev/ttyACM0
-начало: 2026-11-21T16:57:44
+начало: 2026-11-21T17:09:54
    0.000 --> 
-   0.503 --> info
-   0.553 <-- info
-   0.553 <-- name: es-adc
-   0.553 <-- version: 1.0.0
-   0.553 <-- project: 311-adc
-   0.553 <-- repo: https://github.com/I0negunman/es-student
-   0.553 <-- board: pico
-   0.553 <-- serial: E66098F29B1D7339
-   0.553 <-- chip: manufacturer 0x927, part 0x0002, revision 1
-   0.553 <-- pico-sdk: 2.3.0
-   1.506 --> get_temp
-   1.557 <-- get_temp
-   1.557 <-- temp: 24.8 C
-   2.512 --> get_temp
-   2.562 <-- get_temp
-   2.562 <-- temp: 26.2 C
-   3.516 --> get_temp
-   3.566 <-- get_temp
-   3.566 <-- temp: 26.2 C
-   4.520 --> get_voltage
-   4.570 <-- get_voltage
-   4.570 <-- voltage: 1.310 V
-итог: отправлено кадров 6, принято строк 17
+   0.502 --> help
+   0.503 <-- help
+   0.503 <-- help             list of commands
+   0.503 <-- info             device passport
+   0.503 <-- uptime           time since reset
+   0.503 <-- led_enable       turn on LED
+   0.503 <-- led_disable      turn off LED
+   0.503 <-- led_blink        blink LED
+   0.503 <-- led_period       set LED period: led_period <period_ms>
+   0.504 <-- button           see state of the button and amount of presses
+   0.504 <-- pi               see status of pi calculation or its result
+   0.504 <-- pi_start         precision <numbers after the dot>
+   0.504 <-- profiling        see profiling results
+   0.554 <-- profiling_reset  reset profiling results
+   0.554 <-- get_voltage      get voltage on ACP channel
+   0.554 <-- get_temp         chip temperature, degrees Celsius
+   1.509 --> info
+   1.559 <-- info
+   1.559 <-- name: es-adc
+   1.559 <-- version: 1.0.0
+   1.559 <-- project: 311-adc
+   1.559 <-- repo: https://github.com/I0negunman/es-student
+   1.559 <-- board: pico
+   1.559 <-- serial: E66098F29B1D7339
+   1.559 <-- chip: manufacturer 0x927, part 0x0002, revision 1
+   1.559 <-- pico-sdk: 2.3.0
+   2.514 --> get_temp
+   2.564 <-- get_temp
+   2.564 <-- temp: 26.2 C
+   3.518 --> get_temp
+   3.568 <-- get_temp
+   3.568 <-- temp: 27.1 C
+   4.523 --> get_temp
+   4.574 <-- get_temp
+   4.574 <-- temp: 27.1 C
+   5.529 --> get_voltage
+   5.580 <-- get_voltage
+   5.580 <-- voltage: 0.546 V
+итог: отправлено кадров 7, принято строк 32
