@@ -182,6 +182,10 @@ static void cmd_get_voltage(const command_t *command) {
     printf("voltage: %.03f V\n", platform_voltage_read());
 }
 
+static void cmd_get_temp(const command_t *command) {
+    printf("temp: %.01f C\n", platform_temp_read());
+}
+
 const api_command_t api_commands[] = {
     { "info", "device passport", cmd_info },
     { "uptime", "time since reset", cmd_uptime },
@@ -195,6 +199,7 @@ const api_command_t api_commands[] = {
     { "profiling", "see profiling results", cmd_profiling},
     { "profiling_reset", "reset profiling results", cmd_profiling_reset},
     { "get_voltage", "get voltage on ACP channel", cmd_get_voltage},
+    { "get_temp", "chip temperature, degrees Celsius", cmd_get_temp},
 };
 
 const uint64_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
