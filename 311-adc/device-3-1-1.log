@@ -1,0 +1,42 @@
+задание: 3.1.1
+проект: 311-adc
+устройство: 2e8a:000a
+серийный номер: E66098F29B1D7339
+порт: /dev/ttyACM0
+начало: 2026-11-21T16:38:58
+   0.000 --> 
+   0.503 --> help
+   0.504 <-- help
+   0.504 <-- help             list of commands
+   0.504 <-- info             device passport
+   0.504 <-- uptime           time since reset
+   0.504 <-- led_enable       turn on LED
+   0.505 <-- led_disable      turn off LED
+   0.505 <-- led_blink        blink LED
+   0.505 <-- led_period       set LED period: led_period <period_ms>
+   0.505 <-- button           see state of the button and amount of presses
+   0.505 <-- pi               see status of pi calculation or its result
+   0.505 <-- pi_start         precision <numbers after the dot>
+   0.505 <-- profiling        see profiling results
+   0.555 <-- profiling_reset  reset profiling results
+   0.555 <-- get_voltage      get voltage on ACP channel
+   1.511 --> info
+   1.561 <-- info
+   1.561 <-- name: es-adc
+   1.561 <-- version: 1.0.0
+   1.561 <-- project: 311-adc
+   1.561 <-- repo: https://github.com/I0negunman/es-student
+   1.561 <-- board: pico
+   1.561 <-- serial: E66098F29B1D7339
+   1.561 <-- chip: manufacturer 0x927, part 0x0002, revision 1
+   1.561 <-- pico-sdk: 2.3.0
+   2.516 --> get_voltage
+   2.566 <-- get_voltage
+   2.566 <-- voltage: 0.640 V
+   3.522 --> get_voltage
+   3.572 <-- get_voltage
+   3.572 <-- voltage: 0.642 V
+   4.528 --> get_voltage
+   4.578 <-- get_voltage
+   4.578 <-- voltage: 0.641 V
+итог: отправлено кадров 6, принято строк 29
