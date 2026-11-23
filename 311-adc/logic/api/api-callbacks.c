@@ -197,7 +197,7 @@ static void cmd_tm_start(const command_t *command) {
         }
     }
     if (!telemetry_task_start(tm_period_ms)) {
-        printf("period_ms must be at least 10\n");
+        printf("error: period_ms must be at least 10\n");
         return;
     }
     printf("telemetry: started, period %lu ms\n",tm_period_ms);
