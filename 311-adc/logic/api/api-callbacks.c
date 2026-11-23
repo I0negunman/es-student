@@ -13,7 +13,7 @@
 #include "firmware.h"
 #include "systime/systime.h"
 #include "platform/platform.h"
-
+#include "telemetry-task/telemetry-task.h"
 
 
 static bool parse_u32(const char *text, uint32_t *value)
@@ -186,6 +186,33 @@ static void cmd_get_temp(const command_t *command) {
     printf("temp: %.01f C\n", platform_temp_read());
 }
 
+static void cmd_tm_start(const command_t *command) {
+    uint32_t tm_period_ms = 100;
+    if (command->argc > 0)
+    {
+        if (command->argc != 1 || !parse_u32(command->argv[0], &tm_period_ms))
+        {
+            printf("error: usage tm_start [<period_ms>]\n");
+            return;
+        }
+    }
+    if (!telemetry_task_start(tm_period_ms)) {
+        printf("period_ms must be at least 10\n");
+        return;
+    }
+    printf("telemetry: started, period %lu ms\n",tm_period_ms);
+}
+
+static void cmd_tm_stop(const command_t *command) {
+    telemetry_task_stop();
+    printf("telemetry: stopped\n");
+}
+
+void api_print_telemetry(const telemetry_record_t *record) {
+    printf("tm: %llu %.3f %.1f \n", record->time_us, record->voltage_v, record->temp_c);
+}
+
+
 const api_command_t api_commands[] = {
     { "info", "device passport", cmd_info },
     { "uptime", "time since reset", cmd_uptime },
@@ -200,6 +227,8 @@ const api_command_t api_commands[] = {
     { "profiling_reset", "reset profiling results", cmd_profiling_reset},
     { "get_voltage", "get voltage on ACP channel", cmd_get_voltage},
     { "get_temp", "chip temperature, degrees Celsius", cmd_get_temp},
+    { "tm_start", "start telemetry: tm_start <period_ms>", cmd_tm_start},
+    { "tm_stop", "stop telemetry", cmd_tm_stop},
 };
 
 const uint64_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);

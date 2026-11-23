@@ -3,44 +3,46 @@
 устройство: 2e8a:000a
 серийный номер: E66098F29B1D7339
 порт: /dev/ttyACM0
-начало: 2026-11-21T17:09:54
+начало: 2026-11-24T00:31:38
    0.000 --> 
-   0.502 --> help
-   0.503 <-- help
-   0.503 <-- help             list of commands
-   0.503 <-- info             device passport
-   0.503 <-- uptime           time since reset
-   0.503 <-- led_enable       turn on LED
-   0.503 <-- led_disable      turn off LED
-   0.503 <-- led_blink        blink LED
-   0.503 <-- led_period       set LED period: led_period <period_ms>
-   0.504 <-- button           see state of the button and amount of presses
-   0.504 <-- pi               see status of pi calculation or its result
-   0.504 <-- pi_start         precision <numbers after the dot>
-   0.504 <-- profiling        see profiling results
-   0.554 <-- profiling_reset  reset profiling results
-   0.554 <-- get_voltage      get voltage on ACP channel
-   0.554 <-- get_temp         chip temperature, degrees Celsius
-   1.509 --> info
-   1.559 <-- info
-   1.559 <-- name: es-adc
-   1.559 <-- version: 1.0.0
-   1.559 <-- project: 311-adc
-   1.559 <-- repo: https://github.com/I0negunman/es-student
-   1.559 <-- board: pico
-   1.559 <-- serial: E66098F29B1D7339
-   1.559 <-- chip: manufacturer 0x927, part 0x0002, revision 1
-   1.559 <-- pico-sdk: 2.3.0
-   2.514 --> get_temp
-   2.564 <-- get_temp
-   2.564 <-- temp: 26.2 C
-   3.518 --> get_temp
-   3.568 <-- get_temp
-   3.568 <-- temp: 27.1 C
-   4.523 --> get_temp
-   4.574 <-- get_temp
-   4.574 <-- temp: 27.1 C
-   5.529 --> get_voltage
-   5.580 <-- get_voltage
-   5.580 <-- voltage: 0.546 V
-итог: отправлено кадров 7, принято строк 32
+   0.503 --> help
+   0.505 <-- help
+   0.505 <-- help             list of commands
+   0.505 <-- info             device passport
+   0.505 <-- uptime           time since reset
+   0.505 <-- led_enable       turn on LED
+   0.505 <-- led_disable      turn off LED
+   0.505 <-- led_blink        blink LED
+   0.505 <-- led_period       set LED period: led_period <period_ms>
+   0.505 <-- button           see state of the button and amount of presses
+   0.505 <-- pi               see status of pi calculation or its result
+   0.505 <-- pi_start         precision <numbers after the dot>
+   0.505 <-- profiling        see profiling results
+   0.555 <-- profiling_reset  reset profiling results
+   0.555 <-- get_voltage      get voltage on ACP channel
+   0.555 <-- get_temp         chip temperature, degrees Celsius
+   0.555 <-- tm_start         start telemetry: tm_start <period_ms>
+   0.555 <-- tm_stop          stop telemetry
+   1.511 --> info
+   1.561 <-- info
+   1.561 <-- name: es-adc
+   1.561 <-- version: 1.0.0
+   1.561 <-- project: 311-adc
+   1.561 <-- repo: https://github.com/I0negunman/es-student
+   1.561 <-- board: pico
+   1.561 <-- serial: E66098F29B1D7339
+   1.561 <-- chip: manufacturer 0x927, part 0x0002, revision 1
+   1.561 <-- pico-sdk: 2.3.0
+   2.516 --> get_temp
+   2.566 <-- get_temp
+   2.566 <-- temp: 26.2 C
+   3.521 --> get_temp
+   3.571 <-- get_temp
+   3.571 <-- temp: 27.1 C
+   4.526 --> get_temp
+   4.576 <-- get_temp
+   4.576 <-- temp: 27.6 C
+   5.531 --> get_voltage
+   5.581 <-- get_voltage
+   5.581 <-- voltage: 0.553 V
+итог: отправлено кадров 7, принято строк 34
