@@ -200,7 +200,7 @@ static void cmd_tm_start(const command_t *command) {
         printf("error: period_ms must be at least 10\n");
         return;
     }
-    printf("telemetry: started, period %lu ms\n",tm_period_ms);
+    printf("telemetry: started, period %lu ms\n", tm_period_ms);
 }
 
 static void cmd_tm_stop(const command_t *command) {
@@ -212,6 +212,22 @@ void api_print_telemetry(const telemetry_record_t *record) {
     printf("tm: %llu %.3f %.1f \n", record->time_us, record->voltage_v, record->temp_c);
 }
 
+void cmd_timer_blink_start(const command_t *command) {
+    uint32_t blink_period_ms;
+    if (command->argc != 1 || !parse_u32(command->argv[0], &blink_period_ms))
+    {
+        printf("error: usage timer_blink_start [<period_ms>]\n");
+        return;
+    }    
+    if (!platform_blink_start(blink_period_ms)) {
+        printf("error: period_ms must be 10..60000\n");
+    }
+    printf("timer_blink: started, period %lu ms\n", blink_period_ms);
+}
+
+void cmd_timer_blink_stop(const command_t *command) {
+    printf("timer_blink: stopped, %lu toggles\n", platform_blink_stop());
+}
 
 const api_command_t api_commands[] = {
     { "info", "device passport", cmd_info },
@@ -229,6 +245,8 @@ const api_command_t api_commands[] = {
     { "get_temp", "chip temperature, degrees Celsius", cmd_get_temp},
     { "tm_start", "start telemetry: tm_start <period_ms>", cmd_tm_start},
     { "tm_stop", "stop telemetry", cmd_tm_stop},
+    { "timer_blink_start", "blink led by timer: timer_blink_start <period_ms>", cmd_timer_blink_start },
+    { "timer_blink_stop", "stop timer blink, number of toggles", cmd_timer_blink_stop },
 };
 
 const uint64_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);

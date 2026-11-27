@@ -6,6 +6,7 @@
 #define ADC_PIN 26
 #define ADC_CHANNEL 0
 #define ADC_TEMP_CHANNEL 4
+#
 
 // опорное напряжение АЦП на плате Pico и число уровней 12-разрядного кода
 #define ADC_VREF_V 3.3f
@@ -57,7 +58,7 @@ float platform_temp_read(void) {
 static bool on_blink(repeating_timer_t *timer)
 {
     blink_on = !blink_on;
-    gpio_put(LED_PIN, blink_on);
+    gpio_put(PICO_DEFAULT_LED_PIN, blink_on);
     blink_toggles++;
 
     // true — вызвать снова через тот же период
@@ -88,6 +89,6 @@ uint32_t platform_blink_stop(void)
     }
 
     blink_on = false;
-    gpio_put(LED_PIN, 0);
+    gpio_put(PICO_DEFAULT_LED_PIN, 0);
     return blink_toggles;
 }
