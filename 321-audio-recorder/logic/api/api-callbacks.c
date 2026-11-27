@@ -216,7 +216,7 @@ void cmd_timer_blink_start(const command_t *command) {
     uint32_t blink_period_ms;
     if (command->argc != 1 || !parse_u32(command->argv[0], &blink_period_ms))
     {
-        printf("error: usage timer_blink_start [<period_ms>]\n");
+        printf("error: usage timer_blink_start <period_ms>\n");
         return;
     }    
     if (!platform_blink_start(blink_period_ms)) {
