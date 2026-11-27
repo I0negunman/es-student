@@ -272,7 +272,7 @@ void cmd_cap_dump(const command_t *command) {
         return;
     }
     platform_capture_get(&capture);
-    printf("capture: %lu samples, period %lu us, interval %lu...%lu us, handler %.01f %%\n", capture.count, capture.period_us, capture.min_interval_us, capture.max_interval_us, capture.handler_percent);
+    printf("capture: %lu samples, period %lu us, interval %lu..%lu us, handler %.01f %%\n", capture.count, capture.period_us, capture.min_interval_us, capture.max_interval_us, capture.handler_percent);
     for (int i = 0; i < capture.count; i += 16) {
     printf("cap: ");
         for (int j = 0; j < 16 && i + j < capture.count; j++) {
