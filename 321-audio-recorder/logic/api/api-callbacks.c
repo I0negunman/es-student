@@ -179,15 +179,28 @@ static void cmd_button(const command_t *command) {
     return;
 }
 static void cmd_get_voltage(const command_t *command) {
+    if (platform_adc_busy()) {
+        printf("error: adc busy\n");
+        return;
+    } 
     printf("voltage: %.03f V\n", platform_voltage_read());
 }
 
 static void cmd_get_temp(const command_t *command) {
+    if (platform_adc_busy()) {
+        printf("error: adc busy\n");
+        return;
+    } 
     printf("temp: %.01f C\n", platform_temp_read());
 }
 
 static void cmd_tm_start(const command_t *command) {
     uint32_t tm_period_ms = 100;
+
+    if (platform_adc_busy()) {
+        printf("error: adc busy\n");
+        return;
+    } 
     if (command->argc > 0)
     {
         if (command->argc != 1 || !parse_u32(command->argv[0], &tm_period_ms))
@@ -229,6 +242,48 @@ void cmd_timer_blink_stop(const command_t *command) {
     printf("timer_blink: stopped, %lu toggles\n", platform_blink_stop());
 }
 
+void cmd_cap_start(const command_t *command) {
+    uint32_t count;
+    uint32_t period_us;
+    if (command->argc != 2 || !parse_u32(command->argv[0], &count) || !parse_u32(command->argv[1], &period_us))
+    {
+        printf("error: usage cap_start <N> <period_us>\n");
+        return;
+    }
+
+    if (platform_adc_busy() || telemetry_task_get_state() == TELEMETRY_STATE_RUN) {
+        printf("error: adc busy\n");
+        return;
+    }
+
+    if (!platform_capture_start(count, period_us)) {
+        printf("error: N must be 1..2000, period_us at least 10\n");
+        return;
+    }
+
+    printf("capture: started, %lu samples, period %lu us\n", count, period_us);
+    return;
+}
+
+void cmd_cap_dump(const command_t *command) {
+    platform_capture_t capture = {};
+    if (!platform_capture_done()) {
+        printf("error: no capture\n");
+        return;
+    }
+    platform_capture_get(&capture);
+    printf("capture: %lu samples, period %lu us, interval %lu...%lu us, handler %.01f %%\n", capture.count, capture.period_us, capture.min_interval_us, capture.max_interval_us, capture.handler_percent);
+    for (int i = 0; i < capture.count; i += 16) {
+    printf("cap: ");
+        for (int j = 0; j < 16 && i + j < capture.count; j++) {
+            printf("%u ", capture.samples[i + j]);
+        }
+    printf("\n");
+}
+}
+
+
+
 const api_command_t api_commands[] = {
     { "info", "device passport", cmd_info },
     { "uptime", "time since reset", cmd_uptime },
@@ -247,6 +302,9 @@ const api_command_t api_commands[] = {
     { "tm_stop", "stop telemetry", cmd_tm_stop},
     { "timer_blink_start", "blink led by timer: timer_blink_start <period_ms>", cmd_timer_blink_start },
     { "timer_blink_stop", "stop timer blink, number of toggles", cmd_timer_blink_stop },
+    { "timer_blink_stop", "stop timer blink, number of toggles", cmd_timer_blink_stop },
+    { "cap_start", "start capture", cmd_cap_start},
+    { "cap_dump", "see capture results", cmd_cap_dump},
 };
 
 const uint64_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
