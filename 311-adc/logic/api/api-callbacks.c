@@ -212,6 +212,15 @@ void api_print_telemetry(const telemetry_record_t *record) {
     printf("tm: %llu %.3f %.1f \n", record->time_us, record->voltage_v, record->temp_c);
 }
 
+void cmd_charge_on(const command_t *command) {
+    platform_charge_set(1);
+    printf("charge: on\n");
+}
+
+void cmd_charge_off(const command_t *command) {
+    platform_charge_set(0);
+    printf("charge: off\n");
+}
 
 const api_command_t api_commands[] = {
     { "info", "device passport", cmd_info },
@@ -229,6 +238,8 @@ const api_command_t api_commands[] = {
     { "get_temp", "chip temperature, degrees Celsius", cmd_get_temp},
     { "tm_start", "start telemetry: tm_start <period_ms>", cmd_tm_start},
     { "tm_stop", "stop telemetry", cmd_tm_stop},
+    { "charge_on", "start charging capacitor", cmd_charge_on},
+    { "charge_off", "stop charging capacitor", cmd_charge_off},
 };
 
 const uint64_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
